@@ -1,0 +1,30 @@
+# Crear directorios del proyecto
+mkdir quotation-system
+cd quotation-system
+mkdir client server
+
+# Inicializar el cliente (frontend)
+cd client
+npm create vite@latest . -- --template react
+npm install axios react-router-dom tailwindcss @headlessui/react dependencias taildwind
+npm install axios @tailwindcss/forms tailwindcss postcss autoprefixer
+
+# Inicializar el servidor (backend)
+cd ../server
+npm init -y
+npm install express mongoose cors dotenv
+
+
+-----------------
+
+
+# Terminal 1 - Servidor
+cd server
+npm run dev
+
+# Terminal 2 - Cliente
+
+npm install @vitejs/plugin-react --save-dev
+
+cd client
+npm run dev
