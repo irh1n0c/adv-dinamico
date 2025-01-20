@@ -2,21 +2,36 @@ const express = require('express');
 const router = express.Router();
 const Quotation = require('../models/Quotation');
 
-// Obtener cotización por número
-router.get('/:number/:year', async (req, res) => {
+// Obtener cotización por número, letra y año
+router.get('/:number/:letter/:year', async (req, res) => {
   try {
+    const { number, letter, year } = req.params;
+    
+    if (!number || !letter || !year) {
+      return res.status(400).json({ 
+        message: 'Se requieren número, letra y año de la cotización' 
+      });
+    }
+
     const quotation = await Quotation.findOne({
-      'quotationNumber.number': req.params.number,
-      'quotationNumber.year': req.params.year
+      'quotationNumber.number': number,
+      'quotationNumber.letter': letter.toUpperCase(),
+      'quotationNumber.year': year
     });
     
     if (!quotation) {
-      return res.status(404).json({ message: 'Cotización no encontrada' });
+      return res.status(404).json({ 
+        message: `Cotización ${number}${letter}-${year} no encontrada` 
+      });
     }
     
     res.json(quotation);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error al buscar cotización:', error);
+    res.status(500).json({ 
+      message: 'Error al buscar la cotización', 
+      error: error.message 
+    });
   }
 });
 
@@ -39,6 +54,13 @@ router.put('/:id', async (req, res) => {
       req.body,
       { new: true }
     );
+    
+    if (!quotation) {
+      return res.status(404).json({ 
+        message: 'Cotización no encontrada para actualizar' 
+      });
+    }
+    
     res.json(quotation);
   } catch (error) {
     res.status(400).json({ message: error.message });

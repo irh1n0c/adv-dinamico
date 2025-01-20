@@ -1,21 +1,8 @@
-// import QuotationForm from "./components/QuotationForm.jsx";
-// import QuotationTable from "./components/QuotationTable.jsx";
 
-// function App() {
-//   return (
-//     <div className="app-container">
-//       <h1>Test Heading</h1>
-//       <QuotationForm />
-//       <QuotationTable />
-//     </div>
-//   )
-// }
-
-// export default App
 
 import React, { useState } from "react";
 import QuotationForm from "./components/QuotationForm";
-import QuotationTable from "./components/QuotationTable";
+//import QuotationTable from "./components/QuotationTable";
 
 function App() {
   const [items, setItems] = useState([
@@ -38,11 +25,11 @@ function App() {
   return (
     <div className="app-container">
       <QuotationForm />
-      <QuotationTable
+      {/* <QuotationTable
         items={items}
         onItemChange={handleItemChange}
         onAddItem={handleAddItem}
-      />
+      /> */}
     </div>
   );
 }

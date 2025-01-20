@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 
 const quotationSchema = new mongoose.Schema({
+  // quotationNumber: {
+  //   number: { type: Number, required: true },
+  //   year: { type: Number, required: true }
+  // },
   quotationNumber: {
     number: { type: Number, required: true },
+    letter: { type: String, required: true, match: /^[A-Z]$/ }, // Nueva propiedad
     year: { type: Number, required: true }
   },
   date: { type: Date, default: Date.now },

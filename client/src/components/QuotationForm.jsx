@@ -1,99 +1,211 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import ClientInfo from './ClientInfo';
+import QuotationDetails from './QuotationDetails';
+import QuotationItems from './QuotationItems';
 
 const QuotationForm = () => {
   const [formData, setFormData] = useState({
     quotationNumber: {
-      number: "",
+      number: '',
+      letter: '',
       year: new Date().getFullYear(),
     },
     clientInfo: {
-      razonSocial: "",
-      ruc: "",
-      area: "",
-      atencion: "",
+      razonSocial: '',
+      ruc: '',
+      area: '',
+      atencion: ''
     },
     quotationDetails: {
-      validezOferta: "",
-      condicionPago: "",
-      moneda: "soles",
-      impuestos: "",
-      saludo: "Es grato saludarlo...",
+      validezOferta: '',
+      condicionPago: '',
+      moneda: 'soles',
+      impuestos: '',
+      saludo: 'Es grato saludarlo...'
     },
-    items: [],
+    items: []
   });
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleInputChange = (e, section, field) => {
-    const { name, value } = e.target;
+  const handleClientInfoChange = (clientInfo) => {
+    setFormData(prev => ({ ...prev, clientInfo }));
+  };
 
-    setFormData((prev) => {
-      if (section) {
-        return {
-          ...prev,
-          [section]: {
-            ...prev[section],
-            [field || name]: value,
-          },
-        };
+  const handleDetailsChange = (quotationDetails) => {
+    setFormData(prev => ({ ...prev, quotationDetails }));
+  };
+
+  const handleItemsChange = (items) => {
+    setFormData(prev => ({ ...prev, items }));
+  };
+
+  const handleQuotationNumberChange = (e) => {
+    const { name, value } = e.target;
+    let processedValue = value;
+    
+    // Si es el campo letra, convertir a mayúscula y limitar a 1 carácter
+    if (name === 'letter') {
+      processedValue = value.toUpperCase().slice(0, 1);
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      quotationNumber: {
+        ...prev.quotationNumber,
+        [name]: processedValue
       }
-      return { ...prev, [name]: value };
-    });
+    }));
   };
 
   const searchQuotation = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.year}`
-      );
+    if (!formData.quotationNumber.number || !formData.quotationNumber.letter || !formData.quotationNumber.year) {
+      alert('Por favor ingrese el número, letra y año de la cotización');
+      return;
+    }
 
-      if (response.data) {
-        setFormData(response.data);
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Cotización no encontrada');
+      }
+
+      const data = await response.json();
+      
+      if (data) {
+        const formattedData = {
+          ...data,
+          quotationNumber: {
+            number: data.quotationNumber?.number || '',
+            letter: data.quotationNumber?.letter || '',
+            year: data.quotationNumber?.year || new Date().getFullYear()
+          },
+          clientInfo: {
+            razonSocial: data.clientInfo?.razonSocial || '',
+            ruc: data.clientInfo?.ruc || '',
+            area: data.clientInfo?.area || '',
+            atencion: data.clientInfo?.atencion || ''
+          },
+          quotationDetails: {
+            validezOferta: data.quotationDetails?.validezOferta || '',
+            condicionPago: data.quotationDetails?.condicionPago || '',
+            moneda: data.quotationDetails?.moneda || 'soles',
+            impuestos: data.quotationDetails?.impuestos || '',
+            saludo: data.quotationDetails?.saludo || 'Es grato saludarlo...'
+          },
+          items: data.items?.map(item => ({
+            item: item.item || '',
+            cantidad: item.cantidad || 0,
+            descripcion: item.descripcion || '',
+            entrega: item.entrega || '',
+            precioUnitario: item.precioUnitario || 0,
+            precioTotal: item.precioTotal || 0
+          })) || []
+        };
+
+        setFormData(formattedData);
         setIsEditing(true);
-      } else {
-        alert("Cotización no encontrada");
       }
     } catch (error) {
-      alert("Error al buscar la cotización");
+      alert(error.message);
+      setFormData({
+        quotationNumber: {
+          number: formData.quotationNumber.number,
+          letter: formData.quotationNumber.letter,
+          year: formData.quotationNumber.year
+        },
+        clientInfo: {
+          razonSocial: '',
+          ruc: '',
+          area: '',
+          atencion: ''
+        },
+        quotationDetails: {
+          validezOferta: '',
+          condicionPago: '',
+          moneda: 'soles',
+          impuestos: '',
+          saludo: 'Es grato saludarlo...'
+        },
+        items: []
+      });
+      setIsEditing(false);
     }
+  };
+
+  const validateForm = () => {
+    if (!formData.quotationNumber.number || !formData.quotationNumber.letter || !formData.quotationNumber.year) {
+      alert('Por favor complete el número, letra y año de la cotización');
+      return false;
+    }
+    if (!formData.clientInfo.razonSocial || !formData.clientInfo.ruc) {
+      alert('Por favor complete la información del cliente');
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      if (isEditing) {
-        await axios.put(
-          `http://localhost:5000/api/quotations/${formData._id}`,
-          formData
-        );
-        alert("Cotización actualizada con éxito");
-      } else {
-        await axios.post("http://localhost:5000/api/quotations", formData);
-        alert("Cotización guardada con éxito");
+      const url = isEditing
+        ? `http://localhost:5000/api/quotations/${formData._id}`
+        : 'http://localhost:5000/api/quotations';
+      
+      const method = isEditing ? 'PUT' : 'POST';
+
+      // Asegurar que la letra esté en mayúscula antes de enviar
+      const dataToSend = {
+        ...formData,
+        quotationNumber: {
+          ...formData.quotationNumber,
+          letter: formData.quotationNumber.letter.toUpperCase()
+        }
+      };
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en la operación');
+      }
+
+      const savedData = await response.json();
+      
+      if (response.ok) {
+        alert(isEditing ? 'Cotización actualizada con éxito' : 'Cotización guardada con éxito');
+        // Actualizar el formulario con los datos guardados
+        setFormData(savedData);
       }
     } catch (error) {
-      alert("Error al guardar la cotización");
+      alert('Error al guardar la cotización: ' + error.message);
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Encabezado */}
+      {/* Header section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="flex items-center justify-center">
-          <img
-            src="/images/logo_adv.jpg"
-            alt="Logo ADV"
-            className="h-24 object-cover"
-          />
+          <img src="/images/logo-horizontal.png" alt="Logo ADV" className="h-24 object-cover" />
         </div>
-
         <div className="flex flex-col items-center justify-center">
           <div className="text-center font-bold">GRUPO ADV SAC.</div>
           <div className="text-center text-xs">
-            Dirección Fiscal: Mza. H Lote 5 P.J. El Triunfo Zn. A – La
-            Joya-Arequipa
+            Dirección Fiscal: Mza. H Lote 5 P.J. El Triunfo Zn. A – La Joya-Arequipa
             <br />
             Almacén: Cal. Rodriguez Ballón 711-Miraflores-Arequipa
             <br />
@@ -103,15 +215,12 @@ const QuotationForm = () => {
             Correo: ventas@grupo-adv.com o gerencia@grupo-adv.com
           </div>
         </div>
-
         <div className="flex items-center justify-center">
-          <img src="/images/iso_logo.png" alt="ISO Logo" className="h-24 object-cover" />
+          <img src="/images/LOGO-INACAL-ok.png" alt="ISO Logo" className="h-24 object-cover" />
         </div>
       </div>
 
-      {/* Formulario */}
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Número de cotización y búsqueda */}
         <div className="flex justify-end">
           <div className="w-full md:w-1/3 space-y-4">
             <div className="flex items-center">
@@ -119,17 +228,31 @@ const QuotationForm = () => {
               <div className="w-1/2 flex gap-2">
                 <input
                   type="number"
+                  name="number"
                   value={formData.quotationNumber.number}
-                  onChange={(e) => handleInputChange(e, "quotationNumber", "number")}
-                  className="w-1/2 px-3 py-2 border rounded-md"
+                  onChange={handleQuotationNumberChange}
+                  className="w-1/3 px-2 py-2 border rounded-md"
                   placeholder="000"
+                  required
+                />
+                <input
+                  type="text"
+                  name="letter"
+                  value={formData.quotationNumber.letter}
+                  onChange={handleQuotationNumberChange}
+                  className="w-1/5 px-2 py-2 border rounded-md uppercase"
+                  maxLength="1"
+                  placeholder="A"
+                  required
                 />
                 <input
                   type="number"
+                  name="year"
                   value={formData.quotationNumber.year}
-                  onChange={(e) => handleInputChange(e, "quotationNumber", "year")}
-                  className="w-1/2 px-3 py-2 border rounded-md"
-                  placeholder="2024"
+                  onChange={handleQuotationNumberChange}
+                  className="w-1/3 px-1 py-2 border rounded-md"
+                  placeholder="2025"
+                  required
                 />
               </div>
               <button
@@ -143,59 +266,27 @@ const QuotationForm = () => {
           </div>
         </div>
 
-        {/* Información del cliente */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <label className="w-1/6 text-sm font-medium">Razón Social</label>
-              <input
-                type="text"
-                name="razonSocial"
-                value={formData.clientInfo.razonSocial}
-                onChange={(e) => handleInputChange(e, "clientInfo", "razonSocial")}
-                className="w-2/3 px-3 py-2 border rounded-md"
-                placeholder="Ingrese Razón Social"
-              />
-            </div>
-            <div className="flex items-center">
-              <label className="w-1/6 text-sm font-medium">RUC</label>
-              <input
-                type="text"
-                name="ruc"
-                value={formData.clientInfo.ruc}
-                onChange={(e) => handleInputChange(e, "clientInfo", "ruc")}
-                className="w-2/3 px-3 py-2 border rounded-md"
-                placeholder="Ingrese RUC"
-              />
-            </div>
-            {/* Otros campos */}
-          </div>
+        <ClientInfo 
+          onClientInfoChange={handleClientInfoChange}
+          initialData={formData.clientInfo}
+        />
 
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <label className="w-1/6 text-sm font-medium">Validez</label>
-              <input
-                type="text"
-                name="validezOferta"
-                value={formData.quotationDetails.validezOferta}
-                onChange={(e) =>
-                  handleInputChange(e, "quotationDetails", "validezOferta")
-                }
-                className="w-2/3 px-3 py-2 border rounded-md"
-                placeholder="Ingrese validez de oferta"
-              />
-            </div>
-            {/* Otros campos */}
-          </div>
-        </div>
+        <QuotationDetails 
+          onDetailsChange={handleDetailsChange}
+          initialData={formData.quotationDetails}
+        />
 
-        {/* Botones de acción */}
-        <div className="flex justify-end space-x-4">
+        <QuotationItems 
+          onItemsChange={handleItemsChange}
+          initialItems={formData.items}
+        />
+
+        <div className="flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+            className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
-            {isEditing ? "Actualizar" : "Guardar"} Cotización
+            {isEditing ? 'Actualizar' : 'Guardar'} Cotización
           </button>
         </div>
       </form>
