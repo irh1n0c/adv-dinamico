@@ -1,6 +1,78 @@
+const fs = require('fs');
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+//const fs = require('fs').promises;
 const Quotation = require('../models/Quotation');
+
+// Configuración de multer para almacenamiento de imágenes
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    const uploadDir = './uploads';
+    if (!fs.existsSync(uploadDir)){
+      fs.mkdirSync(uploadDir);
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // límite de 5MB
+  },
+  fileFilter: function (req, file, cb) {
+    const filetypes = /jpeg|jpg|png/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Solo se permiten archivos de imagen (jpeg, jpg, png)'));
+  }
+});
+
+// Ruta para subir imágenes
+router.post('/uploads', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No se ha proporcionado ninguna imagen' });
+    }
+
+    const imageUrl = `/uploads/quotations/${req.file.filename}`;
+    res.json({
+      url: imageUrl,
+      filename: req.file.filename
+    });
+  } catch (error) {
+    console.error('Error al subir imagen:', error);
+    res.status(500).json({ 
+      message: 'Error al subir la imagen', 
+      error: error.message 
+    });
+  }
+});
+
+// Eliminar imagen
+router.delete('/uploads/:filename', async (req, res) => {
+  try {
+    const filepath = path.join(__dirname, '../uploads/quotations', req.params.filename);
+    await fs.unlink(filepath);
+    res.json({ message: 'Imagen eliminada con éxito' });
+  } catch (error) {
+    console.error('Error al eliminar imagen:', error);
+    res.status(500).json({ 
+      message: 'Error al eliminar la imagen', 
+      error: error.message 
+    });
+  }
+});
 
 // Obtener cotización por número, letra y año
 router.get('/:number/:letter/:year', async (req, res) => {

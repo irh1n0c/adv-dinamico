@@ -1,13 +1,9 @@
 const mongoose = require('mongoose');
 
 const quotationSchema = new mongoose.Schema({
-  // quotationNumber: {
-  //   number: { type: Number, required: true },
-  //   year: { type: Number, required: true }
-  // },
   quotationNumber: {
     number: { type: Number, required: true },
-    letter: { type: String, required: true, match: /^[A-Z]$/ }, // Nueva propiedad
+    letter: { type: String, required: true, match: /^[A-Z]$/ },
     year: { type: Number, required: true }
   },
   date: { type: Date, default: Date.now },
@@ -32,6 +28,11 @@ const quotationSchema = new mongoose.Schema({
     item: String,
     cantidad: Number,
     descripcion: String,
+    images: [{
+      url: { type: String, required: true },
+      caption: { type: String },
+      order: { type: Number, default: 0 }
+    }],
     entrega: String,
     precioUnitario: Number,
     precioTotal: Number
@@ -40,7 +41,6 @@ const quotationSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-// Middleware para actualizar updatedAt antes de cada save
 quotationSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   next();

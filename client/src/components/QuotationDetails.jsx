@@ -32,7 +32,7 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Detalles de la Cotización</h2>
+      <h2 className="text-lg font-semibold mb-4">Terminos Generales</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Validez de Oferta</label>
@@ -77,7 +77,7 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
             className="w-full px-3 py-2 border rounded-md"
           />
         </div>
-        <div className="col-span-2">
+        {/* <div className="col-span-2">
           <label className="block text-sm font-medium mb-1">Saludo</label>
           <textarea
             name="saludo"
@@ -86,7 +86,7 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
             className="w-full px-3 py-2 border rounded-md"
             rows="3"
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

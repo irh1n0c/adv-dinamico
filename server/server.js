@@ -17,6 +17,8 @@ app.use(express.json());
 
 // Rutas
 app.use('/api/quotations', quotationRoutes);
+// En tu app.js o index.js
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 5000;
 

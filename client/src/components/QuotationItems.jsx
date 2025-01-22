@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   const [items, setItems] = useState(initialItems || []);
 
-  // Actualizar items cuando cambian los initialItems
   useEffect(() => {
     if (initialItems && initialItems.length > 0) {
       const formattedItems = initialItems.map(item => ({
@@ -13,6 +12,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
         entrega: item.entrega || '',
         precioUnitario: item.precioUnitario || 0,
         precioTotal: item.precioTotal || 0,
+        images: item.images || []
       }));
       setItems(formattedItems);
     }
@@ -22,7 +22,6 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     const newItems = [...items];
     newItems[index] = { ...newItems[index], [field]: value };
     
-    // Recalcular el precio total si cambia la cantidad o precio unitario
     if (field === 'cantidad' || field === 'precioUnitario') {
       const cantidad = field === 'cantidad' ? value : newItems[index].cantidad;
       const precioUnitario = field === 'precioUnitario' ? value : newItems[index].precioUnitario;
@@ -33,6 +32,69 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     onItemsChange(newItems);
   };
 
+  const handleImageUpload = async (index, files) => {
+    const newItems = [...items];
+    const currentItem = newItems[index];
+    
+    if (!currentItem.images) {
+      currentItem.images = [];
+    }
+
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const response = await fetch('http://localhost:5000/api/quotations/uploads', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al subir la imagen');
+        }
+
+        const data = await response.json();
+        
+        currentItem.images.push({
+          url: data.url,
+          caption: file.name,
+          order: currentItem.images.length
+        });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        alert(error.message);
+      }
+    }
+
+    setItems(newItems);
+    onItemsChange(newItems);
+  };
+
+  const removeImage = async (itemIndex, imageIndex) => {
+    try {
+      const image = items[itemIndex].images[imageIndex];
+      const filename = image.url.split('/').pop();
+      
+      const response = await fetch(`http://localhost:5000/api/quotations/uploads/${filename}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al eliminar la imagen');
+      }
+
+      const newItems = [...items];
+      newItems[itemIndex].images.splice(imageIndex, 1);
+      setItems(newItems);
+      onItemsChange(newItems);
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      alert('Error al eliminar la imagen: ' + error.message);
+    }
+  };
+
   const addItem = () => {
     const newItem = {
       item: '',
@@ -41,6 +103,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
       entrega: '',
       precioUnitario: 0,
       precioTotal: 0,
+      images: []
     };
     const newItems = [...items, newItem];
     setItems(newItems);
@@ -68,53 +131,86 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
       
       <div className="space-y-4">
         {items.map((item, index) => (
-          <div key={index} className="grid grid-cols-6 gap-4 p-4 border rounded-lg">
-            <div className="col-span-6 md:col-span-1">
-              <label className="block text-sm font-medium mb-1">Item</label>
+          <div key={index} className="p-4 border rounded-lg space-y-4">
+            <div className="grid grid-cols-6 gap-4">
+              <div className="col-span-6 md:col-span-1">
+                <label className="block text-sm font-medium mb-1">Item</label>
+                <input
+                  type="text"
+                  value={item.item || ''}
+                  onChange={(e) => handleItemChange(index, 'item', e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div className="col-span-6 md:col-span-1">
+                <label className="block text-sm font-medium mb-1">Cantidad</label>
+                <input
+                  type="number"
+                  value={item.cantidad || 0}
+                  onChange={(e) => handleItemChange(index, 'cantidad', Number(e.target.value))}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div className="col-span-6 md:col-span-2">
+                <label className="block text-sm font-medium mb-1">Descripción</label>
+                <input
+                  type="text"
+                  value={item.descripcion || ''}
+                  onChange={(e) => handleItemChange(index, 'descripcion', e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div className="col-span-6 md:col-span-1">
+                <label className="block text-sm font-medium mb-1">Precio Unitario</label>
+                <input
+                  type="number"
+                  value={item.precioUnitario || 0}
+                  onChange={(e) => handleItemChange(index, 'precioUnitario', Number(e.target.value))}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+              </div>
+              <div className="col-span-5 md:col-span-1">
+                <label className="block text-sm font-medium mb-1">Precio Total</label>
+                <input
+                  type="number"
+                  value={item.precioTotal || 0}
+                  readOnly
+                  className="w-full px-3 py-2 border rounded-md bg-gray-50"
+                />
+              </div>
+            </div>
+
+            <div className="col-span-6">
+              <label className="block text-sm font-medium mb-2">Imágenes</label>
               <input
-                type="text"
-                value={item.item || ''}
-                onChange={(e) => handleItemChange(index, 'item', e.target.value)}
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={(e) => handleImageUpload(index, e.target.files)}
                 className="w-full px-3 py-2 border rounded-md"
               />
+              
+              <div className="mt-2 flex flex-wrap gap-2">
+                {item.images?.map((image, imageIndex) => (
+                  <div key={imageIndex} className="relative group">
+                    <img
+                      src={`http://localhost:5000${image.url}`}
+                      alt={image.caption}
+                      className="h-20 w-20 object-cover rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index, imageIndex)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="col-span-6 md:col-span-1">
-              <label className="block text-sm font-medium mb-1">Cantidad</label>
-              <input
-                type="number"
-                value={item.cantidad || 0}
-                onChange={(e) => handleItemChange(index, 'cantidad', Number(e.target.value))}
-                className="w-full px-3 py-2 border rounded-md"
-              />
-            </div>
-            <div className="col-span-6 md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Descripción</label>
-              <input
-                type="text"
-                value={item.descripcion || ''}
-                onChange={(e) => handleItemChange(index, 'descripcion', e.target.value)}
-                className="w-full px-3 py-2 border rounded-md"
-              />
-            </div>
-            <div className="col-span-6 md:col-span-1">
-              <label className="block text-sm font-medium mb-1">Precio Unitario</label>
-              <input
-                type="number"
-                value={item.precioUnitario || 0}
-                onChange={(e) => handleItemChange(index, 'precioUnitario', Number(e.target.value))}
-                className="w-full px-3 py-2 border rounded-md"
-              />
-            </div>
-            <div className="col-span-5 md:col-span-1">
-              <label className="block text-sm font-medium mb-1">Precio Total</label>
-              <input
-                type="number"
-                value={item.precioTotal || 0}
-                readOnly
-                className="w-full px-3 py-2 border rounded-md bg-gray-50"
-              />
-            </div>
-            <div className="col-span-1 flex items-end">
+
+            <div className="flex justify-end">
               <button
                 type="button"
                 onClick={() => removeItem(index)}

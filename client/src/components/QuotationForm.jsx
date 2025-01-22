@@ -1,7 +1,15 @@
+import { jsPDF } from "jspdf";
 import React, { useState } from 'react';
 import ClientInfo from './ClientInfo';
 import QuotationDetails from './QuotationDetails';
 import QuotationItems from './QuotationItems';
+
+const generatePDF = () => {
+  const label = new jsPDF({
+    format: "a4",
+    unit: "mm",
+  });
+}
 
 const QuotationForm = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +29,7 @@ const QuotationForm = () => {
       condicionPago: '',
       moneda: 'soles',
       impuestos: '',
-      saludo: 'Es grato saludarlo...'
+      saludo: 'Es grato saludarlo... jose'
     },
     items: []
   });
@@ -37,14 +45,18 @@ const QuotationForm = () => {
   };
 
   const handleItemsChange = (items) => {
-    setFormData(prev => ({ ...prev, items }));
+    // Asegurarse de que las imágenes se mantengan al actualizar los items
+    const updatedItems = items.map(item => ({
+      ...item,
+      images: item.images || [] // Mantener las imágenes existentes o inicializar array vacío
+    }));
+    setFormData(prev => ({ ...prev, items: updatedItems }));
   };
 
   const handleQuotationNumberChange = (e) => {
     const { name, value } = e.target;
     let processedValue = value;
     
-    // Si es el campo letra, convertir a mayúscula y limitar a 1 carácter
     if (name === 'letter') {
       processedValue = value.toUpperCase().slice(0, 1);
     }
@@ -97,12 +109,8 @@ const QuotationForm = () => {
             saludo: data.quotationDetails?.saludo || 'Es grato saludarlo...'
           },
           items: data.items?.map(item => ({
-            item: item.item || '',
-            cantidad: item.cantidad || 0,
-            descripcion: item.descripcion || '',
-            entrega: item.entrega || '',
-            precioUnitario: item.precioUnitario || 0,
-            precioTotal: item.precioTotal || 0
+            ...item,
+            images: item.images || [] // Asegurarse de incluir las imágenes
           })) || []
         };
 
@@ -111,11 +119,11 @@ const QuotationForm = () => {
       }
     } catch (error) {
       alert(error.message);
-      setFormData({
+      setFormData(prev => ({
         quotationNumber: {
-          number: formData.quotationNumber.number,
-          letter: formData.quotationNumber.letter,
-          year: formData.quotationNumber.year
+          number: prev.quotationNumber.number,
+          letter: prev.quotationNumber.letter,
+          year: prev.quotationNumber.year
         },
         clientInfo: {
           razonSocial: '',
@@ -131,7 +139,7 @@ const QuotationForm = () => {
           saludo: 'Es grato saludarlo...'
         },
         items: []
-      });
+      }));
       setIsEditing(false);
     }
   };
@@ -162,7 +170,6 @@ const QuotationForm = () => {
       
       const method = isEditing ? 'PUT' : 'POST';
 
-      // Asegurar que la letra esté en mayúscula antes de enviar
       const dataToSend = {
         ...formData,
         quotationNumber: {
@@ -187,7 +194,6 @@ const QuotationForm = () => {
       
       if (response.ok) {
         alert(isEditing ? 'Cotización actualizada con éxito' : 'Cotización guardada con éxito');
-        // Actualizar el formulario con los datos guardados
         setFormData(savedData);
       }
     } catch (error) {
@@ -265,17 +271,27 @@ const QuotationForm = () => {
             </div>
           </div>
         </div>
-
-        <ClientInfo 
-          onClientInfoChange={handleClientInfoChange}
-          initialData={formData.clientInfo}
-        />
-
-        <QuotationDetails 
-          onDetailsChange={handleDetailsChange}
-          initialData={formData.quotationDetails}
-        />
-
+        
+        <div className="flex flex-row w-full gap-4 p-4">
+          <div className="w-1/2">
+            <ClientInfo 
+              onClientInfoChange={handleClientInfoChange}
+              initialData={formData.clientInfo}
+            />
+          </div>
+          <div className="w-1/2">
+          <QuotationDetails 
+              onDetailsChange={handleDetailsChange}
+              initialData={formData.quotationDetails}
+            />
+          </div>
+        </div>
+        <div className="div">
+        <label className="block text-sm font-medium mb-1">Saludo</label>
+          <textarea type="text" 
+          className="w-full px-3 py-2 border rounded-md"
+          />
+        </div>
         <QuotationItems 
           onItemsChange={handleItemsChange}
           initialItems={formData.items}
@@ -287,11 +303,18 @@ const QuotationForm = () => {
             className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
             {isEditing ? 'Actualizar' : 'Guardar'} Cotización
+            </button>
+            <button
+            type="button"
+            onClick={generatePDF}
+            className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
+          >
+            Imprimir PDF
           </button>
-        </div>
-      </form>
-    </div>
-  );
-};
-
-export default QuotationForm;
+            </div>
+        </form>
+      </div>
+    );
+  };
+  
+  export default QuotationForm;
