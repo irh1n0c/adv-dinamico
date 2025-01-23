@@ -31,9 +31,9 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-white p-4 rounded-lg shadow">
       <h2 className="text-lg font-semibold mb-4">Terminos Generales</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Validez de Oferta</label>
           <input

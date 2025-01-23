@@ -134,7 +134,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
           <div key={index} className="p-4 border rounded-lg space-y-4">
             <div className="grid grid-cols-6 gap-4">
               <div className="col-span-6 md:col-span-1">
-                <label className="block text-sm font-medium mb-1">Item</label>
+                <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Item</label>
                 <input
                   type="text"
                   value={item.item || ''}
@@ -143,7 +143,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 />
               </div>
               <div className="col-span-6 md:col-span-1">
-                <label className="block text-sm font-medium mb-1">Cantidad</label>
+                <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Cantidad</label>
                 <input
                   type="number"
                   value={item.cantidad || 0}
@@ -152,7 +152,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 />
               </div>
               <div className="col-span-6 md:col-span-2">
-                <label className="block text-sm font-medium mb-1">Descripción</label>
+                <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Descripción</label>
                 <input
                   type="text"
                   value={item.descripcion || ''}
@@ -161,7 +161,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 />
               </div>
               <div className="col-span-6 md:col-span-1">
-                <label className="block text-sm font-medium mb-1">Precio Unitario</label>
+                <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Precio Unitario</label>
                 <input
                   type="number"
                   value={item.precioUnitario || 0}
@@ -170,7 +170,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 />
               </div>
               <div className="col-span-5 md:col-span-1">
-                <label className="block text-sm font-medium mb-1">Precio Total</label>
+                <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Precio Total</label>
                 <input
                   type="number"
                   value={item.precioTotal || 0}
@@ -181,7 +181,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
             </div>
 
             <div className="col-span-6">
-              <label className="block text-sm font-medium mb-2">Imágenes</label>
+              <label className="block text-sm font-medium mb-2 bg-sky-900 text-white px-2 py-1 rounded inline-block">Imágenes</label>
               <input
                 type="file"
                 multiple
@@ -190,13 +190,13 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 className="w-full px-3 py-2 border rounded-md"
               />
               
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-wrap gap-4">
                 {item.images?.map((image, imageIndex) => (
-                  <div key={imageIndex} className="relative group">
+                  <div key={imageIndex} className="relative group w-32 h-32">
                     <img
                       src={`http://localhost:5000${image.url}`}
                       alt={image.caption}
-                      className="h-20 w-20 object-cover rounded-md"
+                      className="w-full h-full object-cover rounded-md border"
                     />
                     <button
                       type="button"
