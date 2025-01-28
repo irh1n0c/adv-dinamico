@@ -3,15 +3,14 @@ import React, { useState } from 'react';
 import ClientInfo from './ClientInfo';
 import QuotationDetails from './QuotationDetails';
 import QuotationItems from './QuotationItems';
+import QuotePrintTemplate from './print/QuotePrintTemplate';
+import './print/QuotePrintTemplate.css';
 
-const generatePDF = () => {
-  const label = new jsPDF({
-    format: "a4",
-    unit: "mm",
-  });
-}
 
 const QuotationForm = () => {
+  const handlePrint = () => {//PARA IMPRMIR 
+    window.print();
+  };
   const [formData, setFormData] = useState({
     quotationNumber: {
       number: '',
@@ -304,14 +303,12 @@ const QuotationForm = () => {
           >
             {isEditing ? 'Actualizar' : 'Guardar'} Cotización
             </button>
-            <button
-            type="button"
-            onClick={generatePDF}
-            className="px-6 py-2 text-white bg-green-600 rounded-md hover:bg-green-700"
-          >
-            Imprimir PDF
-          </button>
-            </div>
+            
+        </div>
+        <div className="hidden print:block">
+          <QuotePrintTemplate quoteData={formData} />
+        </div>
+          
         </form>
       </div>
     );

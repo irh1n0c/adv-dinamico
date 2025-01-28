@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_CONFIG } from '../config/api';
 
 const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   const [items, setItems] = useState(initialItems || []);
@@ -45,7 +46,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const response = await fetch('http://localhost:5000/api/quotations/uploads', {
+        const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
           method: 'POST',
           body: formData,
         });
@@ -56,7 +57,6 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
         }
 
         const data = await response.json();
-        
         currentItem.images.push({
           url: data.url,
           caption: file.name,
@@ -77,21 +77,27 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
       const image = items[itemIndex].images[imageIndex];
       const filename = image.url.split('/').pop();
       
-      const response = await fetch(`http://localhost:5000/api/quotations/uploads/${filename}`, {
+      console.log('Intentando eliminar archivo:', filename); // Debug
+  
+      const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads/${filename}`, {
         method: 'DELETE'
       });
-
+  
+      const data = await response.json();
+  
       if (!response.ok) {
-        throw new Error('Error al eliminar la imagen');
+        throw new Error(data.message || 'Error al eliminar la imagen');
       }
-
+  
+      // Si la eliminación fue exitosa, actualizar el estado
       const newItems = [...items];
       newItems[itemIndex].images.splice(imageIndex, 1);
       setItems(newItems);
       onItemsChange(newItems);
+  
     } catch (error) {
-      console.error('Error deleting image:', error);
-      alert('Error al eliminar la imagen: ' + error.message);
+      console.error('Error completo:', error);
+      alert(`Error al eliminar la imagen: ${error.message}`);
     }
   };
 
@@ -191,23 +197,27 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
               />
               
               <div className="mt-2 flex flex-wrap gap-4">
-                {item.images?.map((image, imageIndex) => (
-                  <div key={imageIndex} className="relative group w-32 h-32">
-                    <img
-                      src={`http://localhost:5000${image.url}`}
-                      alt={image.caption}
-                      className="w-full h-full object-cover rounded-md border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeImage(index, imageIndex)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
+        {item.images?.map((image, imageIndex) => (
+          <div key={imageIndex} className="relative group w-32 h-32">
+            <img
+              src={API_CONFIG.getImageUrl(image.url)}
+              alt={image.caption}
+              className="w-full h-full object-cover rounded-md border"
+              onError={(e) => {
+                console.error(`Error loading image: ${image.url}`);
+                e.target.src = '/placeholder-image.png'; // Opcional: imagen de respaldo
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => removeImage(index, imageIndex)}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              ×
+            </button>
+          </div>
+        ))}
+      </div>
             </div>
 
             <div className="flex justify-end">

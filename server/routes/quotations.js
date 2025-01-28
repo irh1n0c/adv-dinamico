@@ -45,7 +45,7 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: 'No se ha proporcionado ninguna imagen' });
     }
 
-    const imageUrl = `/uploads/quotations/${req.file.filename}`;
+    const imageUrl = `/uploads/${req.file.filename}`;
     res.json({
       url: imageUrl,
       filename: req.file.filename
@@ -60,16 +60,26 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
 });
 
 // Eliminar imagen
+// Modificar la ruta DELETE en quotations.js
 router.delete('/uploads/:filename', async (req, res) => {
   try {
-    const filepath = path.join(__dirname, '../uploads/quotations', req.params.filename);
-    await fs.unlink(filepath);
+    const filepath = path.join(__dirname, '../uploads', req.params.filename);
+    
+    // Verificar si el archivo existe antes de intentar eliminarlo
+    if (!fs.existsSync(filepath)) {
+      return res.status(404).json({ 
+        message: `El archivo ${req.params.filename} no existe` 
+      });
+    }
+
+    await fs.promises.unlink(filepath);
     res.json({ message: 'Imagen eliminada con éxito' });
   } catch (error) {
-    console.error('Error al eliminar imagen:', error);
+    console.error('Error detallado al eliminar imagen:', error);
     res.status(500).json({ 
-      message: 'Error al eliminar la imagen', 
-      error: error.message 
+      message: 'Error al eliminar la imagen',
+      details: error.message,
+      path: req.params.filename
     });
   }
 });
