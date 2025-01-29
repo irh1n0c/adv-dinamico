@@ -73,11 +73,14 @@ const QuotationForm = () => {
       alert('Por favor ingrese el número, letra y año de la cotización');
       return;
     }
-
     try {
       const response = await fetch(
-        `http://localhost:5000/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
+        `${import.meta.env.VITE_API_URL}/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
       );
+    // try {
+    //   const response = await fetch(
+    //     `http://localhost:5000/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
+    //   );
       
       if (!response.ok) {
         throw new Error('Cotización no encontrada');
@@ -163,7 +166,7 @@ const QuotationForm = () => {
 
     try {
       const url = isEditing
-        ? `http://localhost:5000/api/quotations/${formData._id}`
+        ? `${import.meta.env.VITE_API_URL}/api/quotations/${formData._id}`
         : 'http://localhost:5000/api/quotations';
       
       const method = isEditing ? 'PUT' : 'POST';

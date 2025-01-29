@@ -5,14 +5,16 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const quotationRoutes = require('./routes/quotations');
 const path = require('path'); 
-
 const app = express();
 
 // Conectar a MongoDB
 connectDB();
 
 // Middleware
-app.use(cors('*'));
+app.use(cors({
+  origin: ['https://tudominio.railway.app', 'http://localhost:5173'],
+  credentials: true
+}));
 //app.use(cors({ origin: "https://tu-frontend.com" })); PARA MAYOR SEGURIDAD
 app.use(express.json());
 
@@ -30,7 +32,7 @@ app.use('/uploads', (err, req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
