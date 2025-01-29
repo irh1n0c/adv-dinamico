@@ -12,7 +12,7 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ['https://tudominio.railway.app', 'http://localhost:5173'],
+  origin: ['https://fismetventas.up.railway.app/', 'http://localhost:5173'],
   credentials: true
 }));
 //app.use(cors({ origin: "https://tu-frontend.com" })); PARA MAYOR SEGURIDAD

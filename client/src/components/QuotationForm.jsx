@@ -167,7 +167,7 @@ const QuotationForm = () => {
     try {
       const url = isEditing
         ? `${import.meta.env.VITE_API_URL}/api/quotations/${formData._id}`
-        : 'http://localhost:5000/api/quotations';
+        : `${import.meta.env.VITE_API_URL}/api/quotations`;
       
       const method = isEditing ? 'PUT' : 'POST';
 
