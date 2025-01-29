@@ -1,6 +1,5 @@
 require('dotenv').config();
 console.log('Verificación MONGO_URI:', process.env.MONGODB_URI);
-
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
@@ -13,7 +12,8 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(cors('*'));
+//app.use(cors({ origin: "https://tu-frontend.com" })); PARA MAYOR SEGURIDAD
 app.use(express.json());
 
 // Rutas
