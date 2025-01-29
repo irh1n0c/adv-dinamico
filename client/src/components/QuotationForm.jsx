@@ -28,7 +28,7 @@ const QuotationForm = () => {
       condicionPago: '',
       moneda: 'soles',
       impuestos: '',
-      saludo: ' Es muy grato saludarlo.'
+      saludo: 'Es muy grato saludarlo.'
     },
     items: []
   });
