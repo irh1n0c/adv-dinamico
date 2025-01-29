@@ -44,38 +44,47 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     for (const file of files) {
       try {
         const formData = new FormData();
-        formData.append('image', file);
-
+        formData.append("image", file);
+    
         const response = await fetch(`${process.env.VITE_API_URL}/api/quotations/uploads`, {
-          method: 'POST',
+          method: "POST",
           body: formData,
         });
-        
-        // const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
-        //   method: 'POST',
-        //   body: formData,
-        // });
-
+    
+        // Imprimir la respuesta en la consola antes de procesarla
+        const responseText = await response.text();
+        console.log("Raw response:", responseText);
+    
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Error al subir la imagen');
+          throw new Error(`Error HTTP: ${response.status} - ${responseText}`);
         }
-
-        const data = await response.json();
+    
+        // Intentar parsear JSON solo si hay contenido
+        const data = responseText ? JSON.parse(responseText) : {};
+        
+        if (!data.url) {
+          throw new Error("El backend no devolvió una URL válida.");
+        }
+    
         currentItem.images.push({
           url: data.url,
           caption: file.name,
-          order: currentItem.images.length
+          order: currentItem.images.length,
         });
       } catch (error) {
-        console.error('Error uploading image:', error);
+        console.error("Error uploading image:", error);
         alert(error.message);
       }
     }
-
+    
     setItems(newItems);
     onItemsChange(newItems);
+    
   };
+  // const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
+        //   method: 'POST',
+        //   body: formData,
+        // });
 
   const removeImage = async (itemIndex, imageIndex) => {
     try {
