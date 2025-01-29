@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const quotationSchema = new mongoose.Schema({
   quotationNumber: {
-    number: { type: Number, required: true },
+    number: { type: String, required: true },
     letter: { type: String, required: true, match: /^[A-Z]$/ },
     year: { type: Number, required: true }
   },
@@ -26,7 +26,7 @@ const quotationSchema = new mongoose.Schema({
   },
   items: [{
     item: String,
-    cantidad: Number,
+    cantidad: String,
     descripcion: String,
     images: [{
       url: { type: String, required: true },
