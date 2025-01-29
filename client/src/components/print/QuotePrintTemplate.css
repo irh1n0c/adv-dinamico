@@ -1,66 +1,67 @@
 /* QuotePrintTemplate.css */
 @media print {
-    /* Resetear márgenes de página */
-    @page {
-      margin: 0.5cm;
-    }
-  
-    /* Ocultar elementos no necesarios para impresión */
-    body * {
-      visibility: hidden;
-    }
-  
-    .print-container,
-    .print-container * {
-      visibility: visible;
-    }
-  
-    .print-container {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-    }
-  
-    /* Evitar saltos de página dentro de elementos importantes */
-    .client-info,
-    .terms,
-    .items {
-      break-inside: avoid;
-    }
-  
-    /* Asegurar que las tablas tengan líneas en impresión */
-    table {
-      border-collapse: collapse;
-    }
-  
-    th, td {
-      border: 1px solid #ddd;
-    }
-  
-    /* Ajustes de tamaño de fuente para impresión */
-    body {
-      font-size: 12pt;
-    }
-  
-    h1 {
-      font-size: 18pt;
-    }
-  
-    h2 {
-      font-size: 16pt;
-    }
-  
-    h3 {
-      font-size: 14pt;
-    }
+  @page {
+    margin: 0.5cm;
+    size: A4;
   }
   
-  /* Estilos para vista previa en pantalla */
+  body * {
+    visibility: hidden;
+  }
+  
+  .print-container,
+  .print-container * {
+    visibility: visible;
+  }
+  
   .print-container {
-    background: white;
-    padding: 20px;
-    max-width: 210mm; /* Tamaño A4 */
-    margin: 0 auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 210mm;
   }
+  
+  /* Ajustes de tamaño de fuente para impresión */
+  body {
+    font-size: 12pt;
+  }
+  
+  h1 {
+    font-size: 18pt;
+  }
+  
+  h2 {
+    font-size: 16pt;
+  }
+  
+  h3 {
+    font-size: 14pt;
+  }
+}
+
+/* Estilos para vista previa en pantalla */
+.print-container {
+  background: white;
+  padding: 15px;
+  max-width: 210mm;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.header-section {
+  margin-bottom: 10px;
+}
+
+.client-section {
+  margin-bottom: 10px;
+}
+
+.greeting-section {
+  margin-bottom: 10px;
+}
+
+.items-section {
+  page-break-before: avoid;
+  page-break-inside: avoid;
+}

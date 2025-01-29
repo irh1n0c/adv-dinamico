@@ -143,7 +143,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Item</label>
                 <input
                   type="text"
-                  value={item.item || ''}
+                  value={item.item || '01'}
                   onChange={(e) => handleItemChange(index, 'item', e.target.value)}
                   className="w-full px-3 py-2 border rounded-md"
                 />
@@ -151,15 +151,16 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
               <div className="col-span-6 md:col-span-1">
                 <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Cantidad</label>
                 <input
-                  type="number"
-                  value={item.cantidad || 0}
+                  type="text"
+                  value={item.cantidad || ''}
                   onChange={(e) => handleItemChange(index, 'cantidad', Number(e.target.value))}
                   className="w-full px-3 py-2 border rounded-md"
                 />
               </div>
               <div className="col-span-6 md:col-span-2">
                 <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Descripción</label>
-                <input
+                <textarea
+                  
                   type="text"
                   value={item.descripcion || ''}
                   onChange={(e) => handleItemChange(index, 'descripcion', e.target.value)}
@@ -170,7 +171,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Precio Unitario</label>
                 <input
                   type="number"
-                  value={item.precioUnitario || 0}
+                  value={item.precioUnitario || ''}
                   onChange={(e) => handleItemChange(index, 'precioUnitario', Number(e.target.value))}
                   className="w-full px-3 py-2 border rounded-md"
                 />
@@ -184,9 +185,9 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                   className="w-full px-3 py-2 border rounded-md bg-gray-50"
                 />
               </div>
-            </div>
+          </div>
 
-            <div className="col-span-6">
+          <div className="col-span-6">
               <label className="block text-sm font-medium mb-2 bg-sky-900 text-white px-2 py-1 rounded inline-block">Imágenes</label>
               <input
                 type="file"
@@ -195,9 +196,9 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
                 onChange={(e) => handleImageUpload(index, e.target.files)}
                 className="w-full px-3 py-2 border rounded-md"
               />
-              
-              <div className="mt-2 flex flex-wrap gap-4">
-        {item.images?.map((image, imageIndex) => (
+           
+          <div className="mt-2 flex flex-wrap gap-4">
+          {item.images?.map((image, imageIndex) => (
           <div key={imageIndex} className="relative group w-32 h-32">
             <img
               src={API_CONFIG.getImageUrl(image.url)}

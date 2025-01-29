@@ -32,7 +32,8 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow">
-      <h2 className="text-lg font-semibold mb-4">Terminos Generales</h2>
+      {/* Bloque de términos generales */}
+      <h2 className="text-lg font-semibold mb-4">Términos Generales</h2>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Validez de Oferta</label>
@@ -64,7 +65,7 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
           >
             <option value="soles">Soles</option>
             <option value="dolares">Dólares</option>
-            <option value="euros">Euros</option>
+           
           </select>
         </div>
         <div>
@@ -77,18 +78,20 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
             className="w-full px-3 py-2 border rounded-md"
           />
         </div>
-        {/* <div className="col-span-2">
-          <label className="block text-sm font-medium mb-1">Saludo</label>
-          <textarea
-            name="saludo"
-            value={details.saludo || ''}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border rounded-md"
-            rows="3"
-          />
-        </div> */}
       </div>
     </div>
+
+    
+      /* <div className="mt-8 border-t pt-4">
+        <label className="block text-sm font-medium mb-1">Saludo</label>
+        <textarea
+          name="saludo"
+          value={details.saludo || ''}
+          onChange={handleInputChange}
+          className="w-full px-3 py-2 border rounded-md"
+          rows="3"
+        />
+      </div> */
   );
 };
 

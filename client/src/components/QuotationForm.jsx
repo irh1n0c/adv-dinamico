@@ -28,11 +28,10 @@ const QuotationForm = () => {
       condicionPago: '',
       moneda: 'soles',
       impuestos: '',
-      saludo: 'Es grato saludarlo... jose'
+      saludo: ' Es muy grato saludarlo.'
     },
     items: []
   });
-
   const [isEditing, setIsEditing] = useState(false);
 
   const handleClientInfoChange = (clientInfo) => {
@@ -270,30 +269,39 @@ const QuotationForm = () => {
             </div>
           </div>
         </div>
-        
-        <div className="flex flex-row w-full gap-4 p-4">
-          <div className="w-1/2">
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="w-full sm:w-1/2">
             <ClientInfo 
               onClientInfoChange={handleClientInfoChange}
               initialData={formData.clientInfo}
             />
           </div>
-          <div className="w-1/2">
-          <QuotationDetails 
+          <div className="w-full sm:w-1/2">
+            <QuotationDetails 
               onDetailsChange={handleDetailsChange}
               initialData={formData.quotationDetails}
             />
           </div>
         </div>
-        <div className="div">
-        <label className="block text-sm font-medium mb-1">Saludo</label>
-          <textarea type="text" 
-          className="w-full px-3 py-2 border rounded-md"
+        <div className="bg-white p-4 rounded-lg shadow w-full md:w-1/1 mx-auto">
+          <label className="block text-sm font-medium mb-1">Saludo</label>
+          <textarea 
+            type="text"
+            value={formData.quotationDetails.saludo}
+            onChange={(e) => setFormData(prev => ({
+              ...prev,
+              quotationDetails: {
+                ...prev.quotationDetails,
+                saludo: e.target.value
+              }
+            }))}
+            className="w-full px-0 py-2 border rounded-md"
           />
         </div>
         <QuotationItems 
           onItemsChange={handleItemsChange}
           initialItems={formData.items}
+          
         />
 
         <div className="flex justify-end">
@@ -307,6 +315,7 @@ const QuotationForm = () => {
         </div>
         <div className="hidden print:block">
           <QuotePrintTemplate quoteData={formData} />
+          
         </div>
           
         </form>
