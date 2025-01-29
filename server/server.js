@@ -7,23 +7,26 @@ const quotationRoutes = require('./routes/quotations');
 const path = require('path'); 
 const app = express();
 
-// Conectar a MongoDB
-connectDB();
-
-// Middleware
+// Middleware de CORS (corregido el origin)
 app.use(cors({
-  origin: ['https://fismetventas.up.railway.app/', 'http://localhost:5173'],
+  origin: ['https://fismetventas.up.railway.app', 'http://localhost:5173'], // Removí la barra al final de la URL
   credentials: true
 }));
-//app.use(cors({ origin: "https://tu-frontend.com" })); PARA MAYOR SEGURIDAD
+
 app.use(express.json());
+
+// Conectar a MongoDB (mover esto antes de las rutas)
+try {
+  connectDB();
+} catch (error) {
+  console.error('Error al conectar con la base de datos:', error);
+}
 
 // Rutas
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/quotations', quotationRoutes);
-// En tu app.js o index.js
-//app.use('/uploads', express.static('uploads'));
 
+// Manejo de errores para archivos estáticos
 app.use('/uploads', (err, req, res, next) => {
   if (err) {
     console.error('Error serving static file:', err);
@@ -32,9 +35,8 @@ app.use('/uploads', (err, req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
