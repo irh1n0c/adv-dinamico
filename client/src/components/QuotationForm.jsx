@@ -176,7 +176,8 @@ const QuotationForm = () => {
         quotationNumber: {
           ...formData.quotationNumber,
           letter: formData.quotationNumber.letter.toUpperCase()
-        }
+        },
+        date: new Date().toISOString()
       };
       
       const response = await fetch(url, {
