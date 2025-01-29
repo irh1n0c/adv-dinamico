@@ -18,7 +18,7 @@ const quotationSchema = new mongoose.Schema({
     condicionPago: String,
     moneda: {
       type: String,
-      enum: ['soles', 'dolares', 'euros'],
+      enum: ['soles', 'dolares'],
       default: 'soles'
     },
     impuestos: String,
