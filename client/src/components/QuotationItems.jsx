@@ -46,10 +46,15 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
+        const response = await fetch(`${process.env.VITE_API_URL}/api/quotations/uploads`, {
           method: 'POST',
           body: formData,
         });
+        
+        // const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
+        //   method: 'POST',
+        //   body: formData,
+        // });
 
         if (!response.ok) {
           const errorData = await response.json();
