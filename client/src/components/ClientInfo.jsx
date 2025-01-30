@@ -29,11 +29,11 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
-      <h2 className="text-lg font-Montserrat mb-4">Datos del Cliente</h2>
+    <div className="font-Ubuntu bg-white p-4 rounded-lg shadow">
+      <h2 className="font-medium text-lg mb-4">Datos del Cliente</h2>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div>
-          <label className=" block text-sm font-Ubuntu mb-1">Razón Social</label>
+          <label className="block text-sm font-medium mb-1">Razón Social</label>
           <input
             type="text"
             name="razonSocial"
@@ -43,7 +43,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">RUC</label>
+          <label className="block text-sm font-medium mb-1">RUC</label>
           <input
             type="text"
             name="ruc"

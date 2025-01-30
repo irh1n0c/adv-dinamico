@@ -19,8 +19,8 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
             <img src="/images/logo-horizontal.png" alt="Logo ADV" className="h-20 object-cover" />
           </div>
           <div className="flex flex-col items-center justify-center">
-            <div className="company-info text-center">
-              <h1 className="text-xl font-bold mb-1">GRUPO ADV SAC.</h1>
+            <div className="ubiquitous-font company-info text-center">
+              <h1 className="text-xl font-bold mb-1">FISMET BIOMEDICA</h1>
               <p className="text-xs">RUC 20605967729</p>
               <p className="text-xs">Dirección Fiscal: Mza. H Lote 5 P.J. El Triunfo Zn. A – La Joya-Arequipa</p>
               <p className="text-xs">Almacén: Cal. Rodriguez Ballón 711- Miraflores-Arequipa</p>
@@ -39,9 +39,9 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
       </header>
 
       {/* Client Info and Terms sections */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <section className="border p-3">
-          <h3 className="text-lg font-semibold mb-2">DATOS DEL CLIENTE</h3>
+      <div className="ubiquitous-font grid grid-cols-2 gap-4 mb-4">
+        <section className="bordes terms-section border p-3">
+          <h3 className="bold-line text-lg  mb-2 text-center">DATOS DEL CLIENTE</h3>
           <div className="space-y-1">
             <p className="text-sm"><strong>Razón Social:</strong> {clientInfo?.razonSocial}</p>
             <p className="text-sm"><strong>RUC:</strong> {clientInfo?.ruc}</p>
@@ -50,8 +50,8 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
           </div>
         </section>
 
-        <section className="border p-3">
-          <h3 className="text-lg font-semibold mb-2">TÉRMINOS GENERALES</h3>
+        <section className="bordes p-3">
+          <h3 className="bold-line text-lg mb-2 text-center">TÉRMINOS GENERALES</h3>
           <div className="space-y-1">
             <p className="text-sm"><strong>Validez de Oferta:</strong> {quotationDetails?.validezOferta}</p>
             <p className="text-sm"><strong>Condición de Pago:</strong> {quotationDetails?.condicionPago}</p>
@@ -60,14 +60,15 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
           </div>
         </section>
       </div>
-      <div className="greeting-section">
-        <p>{quoteData.quotationDetails.saludo}</p>
+      <div className=" ubiquitous-font bold-line">
+        <p className="ml-4">{quoteData.quotationDetails.saludo}</p>
       </div>
+      <br />
       {/* Items with detailed description */}
       <section className="items">
         {items.map((item, index) => (
-          <div key={index} className="mb-4 border-b pb-2">
-            <div className="grid grid-cols-12 gap-2 bg-gray-50 p-2">
+          <div key={index} className="ubiquitous-font mb-4 border-b pb-2">
+            <div className="grid grid-cols-12 gap-2 p-2 print-bg-blue">
               <div className="col-span-1 font-bold text-sm">ITEM</div>
               <div className="col-span-1 font-bold text-sm">CANT.</div>
               <div className="col-span-6 font-bold text-sm">DESCRIPCIÓN</div>
@@ -101,7 +102,7 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
 
       {/* Footer */}
       <footer className="mt-4 text-sm space-y-2">
-        <div className="border-t pt-2">
+        <div className="ubiquitous-font border-t pt-2">
           <h4 className="font-bold mb-2">CONDICIONES DE VENTA</h4>
           <ul className="list-disc pl-5 space-y-1">
             <li>Garantía: 12 meses por defecto de fabricación, no incluye accesorios ni suministros</li>

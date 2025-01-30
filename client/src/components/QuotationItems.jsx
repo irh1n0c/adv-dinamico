@@ -139,7 +139,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="font-Ubuntu bg-white p-6 rounded-lg shadow">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold">Items</h2>
         <button

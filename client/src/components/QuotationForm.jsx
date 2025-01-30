@@ -76,12 +76,7 @@ const QuotationForm = () => {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
-      );
-    // try {
-    //   const response = await fetch(
-    //     `http://localhost:5000/api/quotations/${formData.quotationNumber.number}/${formData.quotationNumber.letter}/${formData.quotationNumber.year}`
-    //   );
-      
+      );    
       if (!response.ok) {
         throw new Error('Cotización no encontrada');
       }
@@ -287,19 +282,21 @@ const QuotationForm = () => {
             />
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow w-full md:w-1/1 mx-auto">
+        <div className="font-Ubuntu bg-white p-4 rounded-lg shadow w-full md:w-1/1 mx-auto">
           <label className="block text-sm font-medium mb-1">Saludo</label>
-          <textarea 
+          <textarea
             type="text"
             value={formData.quotationDetails.saludo}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              quotationDetails: {
-                ...prev.quotationDetails,
-                saludo: e.target.value
-              }
-            }))}
-            className="w-full px-0 py-2 border rounded-md"
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                quotationDetails: {
+                  ...prev.quotationDetails,
+                  saludo: e.target.value,
+                },
+              }))
+            }
+            className="w-full px-0 py-2 pl-2 border rounded-md" /* Agregar pl-2 aquí */
           />
         </div>
         <QuotationItems 
@@ -308,15 +305,15 @@ const QuotationForm = () => {
           
         />
 
-        <div className="flex justify-end">
+        <div className="flex justify-center w-full">
           <button
             type="submit"
             className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
             {isEditing ? 'Actualizar' : 'Guardar'} Cotización
-            </button>
-            
+          </button>
         </div>
+        {/* COD para imprmir en el navegador */}
         <div className="hidden print:block">
           <QuotePrintTemplate quoteData={formData} />
           

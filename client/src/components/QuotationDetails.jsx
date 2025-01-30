@@ -31,9 +31,9 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
+    <div className="font-Ubuntu bg-white p-4 rounded-lg shadow">
       {/* Bloque de términos generales */}
-      <h2 className="text-lg font-semibold mb-4">Términos Generales</h2>
+      <h2 className="text-lg font-medium mb-4">Términos Generales</h2>
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Validez de Oferta</label>
@@ -80,18 +80,6 @@ const QuotationDetails = ({ onDetailsChange, initialData = {} }) => {
         </div>
       </div>
     </div>
-
-    
-      /* <div className="mt-8 border-t pt-4">
-        <label className="block text-sm font-medium mb-1">Saludo</label>
-        <textarea
-          name="saludo"
-          value={details.saludo || ''}
-          onChange={handleInputChange}
-          className="w-full px-3 py-2 border rounded-md"
-          rows="3"
-        />
-      </div> */
   );
 };
 

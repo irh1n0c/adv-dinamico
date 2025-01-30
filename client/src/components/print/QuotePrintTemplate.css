@@ -1,8 +1,12 @@
-/* QuotePrintTemplate.css */
+/* Para mantener la visibilidad selectiva: todo lo de arriba */
 @media print {
-  @page {
+    @page {
     margin: 0.5cm;
     size: A4;
+  }
+  @font-face {
+    font-family: 'Ubuntu';
+    src: url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
   }
   
   body * {
@@ -14,17 +18,30 @@
     visibility: visible;
   }
   
+  /* fin */
+
+  .print-bg-blue {
+    background-color: #3b82f6 !important; 
+    color: rgb(255, 255, 255) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   .print-container {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     max-width: 210mm;
-  }
-  
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
   /* Ajustes de tamaño de fuente para impresión */
   body {
-    font-size: 12pt;
+    font-family: 'Ubuntu', sans-serif;    
+  }
+  .ubiquitous-font {
+    font-family: 'Ubuntu', sans-serif;
   }
   
   h1 {
@@ -38,30 +55,36 @@
   h3 {
     font-size: 14pt;
   }
-}
-
-/* Estilos para vista previa en pantalla */
-.print-container {
-  background: white;
-  padding: 15px;
-  max-width: 210mm;
-  margin: 0 auto;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.header-section {
-  margin-bottom: 10px;
-}
-
-.client-section {
-  margin-bottom: 10px;
-}
-
-.greeting-section {
-  margin-bottom: 10px;
-}
-
-.items-section {
-  page-break-before: avoid;
-  page-break-inside: avoid;
+  
+  
+  .header-section {
+    margin-bottom: 10px;
+  }
+  
+  .client-section {
+    margin-bottom: 10px;
+  }
+  
+  .greeting-section {
+    margin-bottom: 10px;
+  }
+  
+  .items-section {
+    page-break-before: avoid;
+    page-break-inside: avoid;
+  }
+  
+  
+  .bordes {
+    border: 1px solid rgb(12, 44, 113);
+    border-radius: 5px;
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 10px; /* Margen inferior */
+    background-color: #f9f9f9; /* Fondo gris claro */
+  }
+  
+  .bold-line {
+    border-left: 6px solid rgb(151, 23, 23);
+  }
+  
 }
