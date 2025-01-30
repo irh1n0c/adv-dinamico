@@ -46,7 +46,8 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
         const formData = new FormData();
         formData.append("image", file);
     
-        const response = await fetch(`${process.env.VITE_API_URL}/api/quotations/uploads`, {
+        const url = "https://fismetventasback.up.railway.app/api/quotations/uploads";
+        const response = await fetch(url, {
           credentials: 'include',
           method: "POST",
           body: formData,
