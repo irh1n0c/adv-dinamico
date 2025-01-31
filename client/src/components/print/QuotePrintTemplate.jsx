@@ -20,11 +20,10 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
           </div>
           <div className="flex flex-col items-center justify-center">
             <div className="ubiquitous-font company-info text-center">
-              <h1 className="text-xl font-bold mb-1">FISMET BIOMEDICA</h1>
-              <p className="text-xs">RUC 20605967729</p>
-              <p className="text-xs">Dirección Fiscal: Mza. H Lote 5 P.J. El Triunfo Zn. A – La Joya-Arequipa</p>
-              <p className="text-xs">Almacén: Cal. Rodriguez Ballón 711- Miraflores-Arequipa</p>
-              <p className="text-xs text-blue-500">Email: ventas@grupo-adv.com</p>
+              <h1 className="text-center font-bold text-rose-900">Fismet Biomedica</h1>
+              <p className="text-xs">RUC: 20605699317</p>
+              <p className="text-xs">Dirección Fiscal: Av. Lima N° 100 int. 507 edificio Nasya II Yanahuara , Arequipa (Ref: Comisaria de Yanahuara)</p>
+              <p className="text-center text-[11px]  text-blue-900">Correo: ventas@fismetbiomedica.com o metrologia@fismetbiomedica.com</p>
             </div>
           </div>
           <div className="flex items-center justify-center">

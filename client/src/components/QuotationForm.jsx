@@ -201,21 +201,20 @@ const QuotationForm = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Header section */}
+      <br />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="flex items-center justify-center">
-          <img src="/images/logo-horizontal.png" alt="Logo ADV" className="h-24 object-cover" />
+          <img src="/images/logo-horizontal.png" alt="Logo fismet" className="h-24 object-cover" />
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <div className="text-center font-bold">GRUPO ADV SAC.</div>
+        <div className="font-Ubuntu flex flex-col items-center justify-center">
+        <div className="text-center font-bold text-rose-900">Fismet Biomedica</div>
           <div className="text-center text-xs">
-            Dirección Fiscal: Mza. H Lote 5 P.J. El Triunfo Zn. A – La Joya-Arequipa
+            Dirección Fiscal: Av. Lima N° 100 int. 507 edificio Nasya II Yanahuara , Arequipa (Ref: Comisaria de Yanahuara)
             <br />
-            Almacén: Cal. Rodriguez Ballón 711-Miraflores-Arequipa
-            <br />
-            RUC 20605967729
+            RUC: 20605699317
           </div>
-          <div className="text-center text-[10px] text-blue-500">
-            Correo: ventas@grupo-adv.com o gerencia@grupo-adv.com
+          <div className="text-center text-[11px] bg-gradient-to-r from-blue-900 via-blue-600 to-red-700 bg-clip-text text-transparent">
+            Correo: ventas@fismetbiomedica.com o metrologia@fismetbiomedica.com
           </div>
         </div>
         <div className="flex items-center justify-center">
@@ -316,9 +315,8 @@ const QuotationForm = () => {
         {/* COD para imprmir en el navegador */}
         <div className="hidden print:block">
           <QuotePrintTemplate quoteData={formData} />
-          
         </div>
-          
+        <br />
         </form>
       </div>
     );
