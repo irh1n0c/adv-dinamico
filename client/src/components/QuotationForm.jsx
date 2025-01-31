@@ -206,7 +206,7 @@ const QuotationForm = () => {
         <div className="flex items-center justify-center">
           <img src="/images/logo-horizontal.png" alt="Logo fismet" className="h-24 object-cover" />
         </div>
-        <div className="font-Ubuntu flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
         <div className="text-center font-bold text-rose-900">Fismet Biomedica</div>
           <div className="text-center text-xs">
             Dirección Fiscal: Av. Lima N° 100 int. 507 edificio Nasya II Yanahuara , Arequipa (Ref: Comisaria de Yanahuara)
