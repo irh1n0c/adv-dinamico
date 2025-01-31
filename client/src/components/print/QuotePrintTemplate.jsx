@@ -80,16 +80,17 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
               <div className="col-span-6">
                 <div className="text-sm whitespace-pre-line">{item.descripcion}</div>
                 {item.images && item.images.length > 0 && (
-                  <div className="flex gap-2 mt-2">
-                    {item.images.map((image, imgIndex) => (
-                      <img
-                        key={imgIndex}
-                        src={API_CONFIG.getImageUrl(image.url)}
-                        alt={`Producto ${index + 1}`}
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                    ))}
-                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
+                  {item.images.map((image, imgIndex) => (
+                    <img
+                      key={imgIndex}
+                      src={API_CONFIG.getImageUrl(image.url)}
+                      alt={`Producto ${index + 1}`}
+                      className="w-full h-40 object-cover rounded"
+                    />
+                  ))}
+                </div>
+                
                 )}
               </div>
               <div className="col-span-2 text-sm text-right">{parseFloat(item.precioUnitario).toFixed(2)}</div>

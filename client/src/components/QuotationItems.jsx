@@ -32,7 +32,6 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     setItems(newItems);
     onItemsChange(newItems);
   };
-
   const handleImageUpload = async (index, files) => {
     const newItems = [...items];
     const currentItem = newItems[index];
@@ -40,36 +39,26 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     if (!currentItem.images) {
       currentItem.images = [];
     }
-
+  
     for (const file of files) {
       try {
         const formData = new FormData();
         formData.append("image", file);
     
-        const url = "https://fismetventasback.up.railway.app/api/quotations/uploads";
-        const response = await fetch(url, {
+        const response = await fetch("https://fismetventasback.up.railway.app/api/quotations/uploads", {
           credentials: 'include',
           method: "POST",
           body: formData,
         });
     
-        // Imprimir la respuesta en la consola antes de procesarla
-        const responseText = await response.text();
-        console.log("Raw response:", responseText);
-    
         if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status} - ${responseText}`);
+          throw new Error(`Error HTTP: ${response.status}`);
         }
     
-        // Intentar parsear JSON solo si hay contenido
-        const data = responseText ? JSON.parse(responseText) : {};
-        
-        if (!data.url) {
-          throw new Error("El backend no devolvió una URL válida.");
-        }
-    
+        const data = await response.json();
         currentItem.images.push({
           url: data.url,
+          filename: data.public_id.replace('uploads/', ''),
           caption: file.name,
           order: currentItem.images.length,
         });
@@ -81,38 +70,31 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     
     setItems(newItems);
     onItemsChange(newItems);
-    
   };
-  // const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
-        //   method: 'POST',
-        //   body: formData,
-        // });
-
+  
   const removeImage = async (itemIndex, imageIndex) => {
     try {
       const image = items[itemIndex].images[imageIndex];
-      const filename = image.url.split('/').pop();
-      
-      console.log('Intentando eliminar archivo:', filename); // Debug
+      const publicId = `uploads/${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
   
-      const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads/${filename}`, {
+      console.log('Eliminando imagen con public_id:', publicId);
+  
+      const response = await fetch(`https://fismetventasback.up.railway.app/api/quotations/uploads/${encodeURIComponent(publicId)}`, {
         method: 'DELETE'
       });
   
-      const data = await response.json();
-  
       if (!response.ok) {
-        throw new Error(data.message || 'Error al eliminar la imagen');
+        const errorText = await response.text();
+        throw new Error(errorText || 'Error al eliminar la imagen');
       }
   
-      // Si la eliminación fue exitosa, actualizar el estado
       const newItems = [...items];
       newItems[itemIndex].images.splice(imageIndex, 1);
       setItems(newItems);
       onItemsChange(newItems);
   
     } catch (error) {
-      console.error('Error completo:', error);
+      console.error('Error al eliminar imagen:', error);
       alert(`Error al eliminar la imagen: ${error.message}`);
     }
   };
@@ -215,7 +197,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
            
           <div className="mt-2 flex flex-wrap gap-4">
           {item.images?.map((image, imageIndex) => (
-          <div key={imageIndex} className="relative group w-32 h-32">
+          <div key={imageIndex} className="relative group w-64 h-64">
             <img
               src={API_CONFIG.getImageUrl(image.url)}
               alt={image.caption}

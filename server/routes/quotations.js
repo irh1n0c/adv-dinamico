@@ -38,8 +38,8 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
     }
 
     res.json({
-      url: req.file.path, // Cloudinary ya nos da la URL completa
-      public_id: req.file.filename // El ID público de Cloudinary
+      url: req.file.path, 
+      public_id: req.file.filename // Cloudinary filename
     });
   } catch (error) {
     console.error('Error al subir imagen:', error);
@@ -50,24 +50,25 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
   }
 });
 
-// Eliminar imagen
-router.delete('/uploads/:public_id', async (req, res) => {
+router.delete('/uploads/:filename(*)', async (req, res) => {
   try {
-    const result = await cloudinary.uploader.destroy(req.params.public_id);
+    const publicId = `uploads/${req.params.filename}`; // Asegúrate de que el public_id incluya la carpeta
+    console.log('Intentando eliminar:', publicId);
+
+    const result = await cloudinary.uploader.destroy(publicId);
     
     if (result.result === 'ok') {
       res.json({ message: 'Imagen eliminada con éxito' });
     } else {
       res.status(404).json({ 
-        message: `No se pudo eliminar la imagen ${req.params.public_id}` 
+        message: `No se pudo eliminar la imagen ${publicId}` 
       });
     }
   } catch (error) {
     console.error('Error al eliminar imagen:', error);
     res.status(500).json({ 
       message: 'Error al eliminar la imagen',
-      details: error.message,
-      public_id: req.params.public_id
+      details: error.message
     });
   }
 });
