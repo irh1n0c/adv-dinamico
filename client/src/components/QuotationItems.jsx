@@ -32,6 +32,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     setItems(newItems);
     onItemsChange(newItems);
   };
+
   const handleImageUpload = async (index, files) => {
     const newItems = [...items];
     const currentItem = newItems[index];
@@ -75,7 +76,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   const removeImage = async (itemIndex, imageIndex) => {
     try {
       const image = items[itemIndex].images[imageIndex];
-      const publicId = `${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
+      const publicId = `uploads/${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
   
       console.log('Eliminando imagen con public_id:', publicId);
   
@@ -158,7 +159,6 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
               <div className="col-span-6 md:col-span-2">
                 <label className="block text-sm font-medium mb-1 bg-sky-900 text-white px-2 py-1 rounded">Descripción</label>
                 <textarea
-                  
                   type="text"
                   value={item.descripcion || ''}
                   onChange={(e) => handleItemChange(index, 'descripcion', e.target.value)}
