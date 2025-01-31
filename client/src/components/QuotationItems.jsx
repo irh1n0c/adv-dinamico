@@ -75,7 +75,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   const removeImage = async (itemIndex, imageIndex) => {
     try {
       const image = items[itemIndex].images[imageIndex];
-      const publicId = `uploads/${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
+      const publicId = `${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
   
       console.log('Eliminando imagen con public_id:', publicId);
   

@@ -52,7 +52,7 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
 
 router.delete('/uploads/:filename(*)', async (req, res) => {
   try {
-    const publicId = `uploads/${req.params.filename}`; // Asegúrate de que el public_id incluya la carpeta
+    const publicId = `${req.params.filename}`; // Asegúrate de que el public_id incluya la carpeta
     console.log('Intentando eliminar:', publicId);
 
     const result = await cloudinary.uploader.destroy(publicId);
