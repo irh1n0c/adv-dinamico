@@ -15,10 +15,15 @@ cloudinary.config({
 // Configuración de multer con Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'uploads',
-    allowed_formats: ['jpg', 'png', 'jpeg'],
-    transformation: [{ width: 1000, crop: "limit" }], // Opcional: limita el tamaño de la imagen
+  params: (req, file) => {
+    return {
+      folder: 'uploads',
+      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+      public_id: (req, file) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        return file.fieldname + '-' + uniqueSuffix;
+      }
+    };
   },
 });
 
@@ -36,12 +41,19 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: 'No se ha proporcionado ninguna imagen' });
     }
 
+    // Usa el resultado de Cloudinary para obtener la URL y public_id
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'uploads', // Carpeta en Cloudinary
+      resource_type: 'image',
+      use_filename: true // Mantiene el nombre original del archivo
+    });
+
     res.json({
-      url: req.file.path, 
-      public_id: req.file.filename // Cloudinary filename
+      url: result.secure_url, 
+      public_id: result.public_id // public_id de Cloudinary
     });
   } catch (error) {
-    console.error('Error al subir imagen:', error);
+    console.error('Error al subir imagen:', error.response?.data || error.message);
     res.status(500).json({ 
       message: 'Error al subir la imagen', 
       error: error.message 
@@ -51,10 +63,16 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
 
 router.delete('/uploads/:filename(*)', async (req, res) => {
   try {
-    const publicId = `uploads/${req.params.filename}`; // Asegúrate de que el public_id incluya la carpeta
+    // Extrae solo el nombre del archivo, sin la carpeta
+    const filename = req.params.filename;
+    const publicId = `uploads/${filename}`; // Ahora el publicId incluye la carpeta correctamente
+
     console.log('Intentando eliminar:', publicId);
 
-    const result = await cloudinary.uploader.destroy(publicId);
+    const result = await cloudinary.uploader.destroy(publicId, {
+      type: 'upload', // Especifica que es un recurso de tipo carga
+      resource_type: 'image' // Especifica que es un recurso de imagen
+    });
     
     if (result.result === 'ok') {
       res.json({ message: 'Imagen eliminada con éxito' });

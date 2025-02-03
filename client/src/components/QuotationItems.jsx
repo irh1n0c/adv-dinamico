@@ -41,33 +41,38 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
       currentItem.images = [];
     }
   
-    for (const file of files) {
+    const uploadPromises = Array.from(files).map(async (file) => {
+      const formData = new FormData();
+      formData.append("image", file);
+  
       try {
-        const formData = new FormData();
-        formData.append("image", file);
-    
         const response = await fetch("https://fismetventasback.up.railway.app/api/quotations/uploads", {
           credentials: 'include',
           method: "POST",
           body: formData,
         });
-    
+  
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);
         }
-    
+  
         const data = await response.json();
-        currentItem.images.push({
+        return {
           url: data.url,
-          filename: data.public_id.replace('uploads/', ''),
+          filename: data.public_id.split('/').pop(), // Extraer solo el nombre del archivo
           caption: file.name,
           order: currentItem.images.length,
-        });
+        };
       } catch (error) {
         console.error("Error uploading image:", error);
         alert(error.message);
+        return null;
       }
-    }
+    });
+  
+    const uploadedImages = (await Promise.all(uploadPromises)).filter(Boolean);
+    
+    currentItem.images.push(...uploadedImages);
     
     setItems(newItems);
     onItemsChange(newItems);
@@ -76,12 +81,10 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   const removeImage = async (itemIndex, imageIndex) => {
     try {
       const image = items[itemIndex].images[imageIndex];
-      const publicId = `uploads/${image.filename}`; // Asegúrate de incluir la carpeta "uploads/"
-  
-      console.log('Eliminando imagen con public_id:', publicId);
-  
-      const response = await fetch(`https://fismetventasback.up.railway.app/api/quotations/uploads/${encodeURIComponent(publicId)}`, {
-        method: 'DELETE'
+      
+      const response = await fetch(`https://fismetventasback.up.railway.app/api/quotations/uploads/${encodeURIComponent(image.filename)}`, {
+        method: 'DELETE',
+        credentials: 'include', // Añadido para mantener la sesión
       });
   
       if (!response.ok) {
@@ -91,6 +94,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
   
       const newItems = [...items];
       newItems[itemIndex].images.splice(imageIndex, 1);
+      
       setItems(newItems);
       onItemsChange(newItems);
   
