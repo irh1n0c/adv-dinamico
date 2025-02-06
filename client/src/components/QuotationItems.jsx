@@ -46,11 +46,12 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
       formData.append("image", file);
   
       try {
-        const response = await fetch("https://fismetventasback.up.railway.app/api/quotations/uploads", {
+        const response = await fetch(`${API_CONFIG.baseURL}/api/quotations/uploads`, {
           credentials: 'include',
           method: "POST",
           body: formData,
         });
+        
   
         if (!response.ok) {
           throw new Error(`Error HTTP: ${response.status}`);

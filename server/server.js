@@ -7,13 +7,14 @@ const quotationRoutes = require('./routes/quotations');
 const path = require('path'); 
 const app = express();
 
-// Middleware de CORS (corregido el origin)
 app.use(cors({
-  origin: ['https://fismetventas.up.railway.app', 'http://localhost:5173'], // Removí la barra al final de la URL
+  origin: ['https://fismetventas.up.railway.app', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+
 
 app.use(express.json());
 

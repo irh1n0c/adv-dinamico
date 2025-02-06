@@ -4,6 +4,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const Quotation = require('../models/Quotation');
+const streamifier = require('streamifier');
 
 // Configuración de Cloudinary
 cloudinary.config({
@@ -26,34 +27,53 @@ const storage = new CloudinaryStorage({
     };
   },
 });
-
-const upload = multer({ 
-  storage: storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // límite de 5MB
-  }
-});
+const upload = multer({ storage: multer.memoryStorage() });
+// const upload = multer({ 
+//   storage: storage,
+//   limits: {
+//     fileSize: 5 * 1024 * 1024 // límite de 5MB
+//   }
+// });
 
 // Ruta para subir imágenes
+
 router.post('/uploads', upload.single('image'), async (req, res) => {
+  console.log("📤 Subida de imagen iniciada...");
+
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No se ha proporcionado ninguna imagen' });
     }
 
-    // Usa el resultado de Cloudinary para obtener la URL y public_id
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'uploads', // Carpeta en Cloudinary
-      resource_type: 'image',
-      use_filename: true // Mantiene el nombre original del archivo
-    });
+    const streamUpload = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'uploads', // Carpeta en Cloudinary
+            resource_type: 'image',
+            use_filename: true
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
+
+    // Subir imagen a Cloudinary desde buffer
+    const result = await streamUpload(req.file.buffer);
+
+    console.log("✅ Imagen subida a Cloudinary:", result.secure_url);
 
     res.json({
       url: result.secure_url, 
       public_id: result.public_id // public_id de Cloudinary
     });
+
   } catch (error) {
-    console.error('Error al subir imagen:', error.response?.data || error.message);
+    console.error("❌ Error al subir imagen:", error);
     res.status(500).json({ 
       message: 'Error al subir la imagen', 
       error: error.message 
