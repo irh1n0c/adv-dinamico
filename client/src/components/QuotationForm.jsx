@@ -4,6 +4,7 @@ import ClientInfo from './ClientInfo';
 import QuotationDetails from './QuotationDetails';
 import QuotationItems from './QuotationItems';
 import QuotePrintTemplate from './print/QuotePrintTemplate';
+import PrintQuoteButton from './print/PrintQuoteButton';
 import './print/QuotePrintTemplate.css';
 
 
@@ -228,15 +229,15 @@ const QuotationForm = () => {
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="flex justify-end">
           <div className="w-full md:w-1/3 space-y-4">
-            <div className="flex items-center">
+            <div className="font-Ubuntu flex items-center">
               <label className="w-1/4 text-sm font-medium">Cotización N°</label>
-              <div className="w-1/2 flex gap-2">
+              <div className="flex justify-end gap-2">
                 <input
                   type="number"
                   name="number"
                   value={formData.quotationNumber.number}
                   onChange={handleQuotationNumberChange}
-                  className="w-1/3 px-2 py-2 border rounded-md"
+                  className="w-1/3 px-3 py-2 border rounded-md"
                   placeholder="000"
                   required
                 />
@@ -245,7 +246,7 @@ const QuotationForm = () => {
                   name="letter"
                   value={formData.quotationNumber.letter}
                   onChange={handleQuotationNumberChange}
-                  className="w-1/5 px-2 py-2 border rounded-md uppercase"
+                  className="w-1/5 px-3 py-2 border rounded-md uppercase"
                   maxLength="1"
                   placeholder="A"
                   required
@@ -255,7 +256,7 @@ const QuotationForm = () => {
                   name="year"
                   value={formData.quotationNumber.year}
                   onChange={handleQuotationNumberChange}
-                  className="w-1/3 px-1 py-2 border rounded-md"
+                  className="w-1/3 px-2 py-2 border rounded-md"
                   placeholder="2025"
                   required
                 />
@@ -303,21 +304,20 @@ const QuotationForm = () => {
         </div>
         <QuotationItems 
           onItemsChange={handleItemsChange}
-          initialItems={formData.items}
-          
-        />
-
-        <div className="flex justify-center w-full">
+          initialItems={formData.items}/>
+        <div className="flex flex-col items-center w-full gap-4">
           <button
             type="submit"
-            className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-          >
+            className="px-6 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
             {isEditing ? 'Actualizar' : 'Guardar'} Cotización
           </button>
-        </div>
-        {/* COD para imprmir en el navegador */}
-        <div className="hidden print:block">
-          <QuotePrintTemplate quoteData={formData} />
+          {/* COD para imprmir en el navegador */}
+          <div>
+            <PrintQuoteButton quoteData={formData} />
+            <div className="hidden print:block">
+              <QuotePrintTemplate quoteData={formData} />
+            </div>
+          </div>
         </div>
         <br />
         </form>

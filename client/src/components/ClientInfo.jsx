@@ -38,7 +38,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
             name="razonSocial" 
             value={clientInfo.razonSocial || ''} 
             onChange={handleInputChange} 
-            className="w-full px-3 py-2 border rounded-md" 
+            className="w-full px-3 py-1 border rounded-md" 
           />
         </div>
         <div>
@@ -48,7 +48,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
             name="ruc" 
             value={clientInfo.ruc || ''} 
             onChange={handleInputChange} 
-            className="w-full px-3 py-2 border rounded-md" 
+            className="w-full px-3 py-1 border rounded-md" 
           />
         </div>
         <div>
@@ -58,7 +58,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
             name="area" 
             value={clientInfo.area || ''} 
             onChange={handleInputChange} 
-            className="w-full px-3 py-2 border rounded-md" 
+            className="w-full px-3 py-1 border rounded-md" 
           />
         </div>
         <div>
@@ -68,7 +68,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
             name="atencion" 
             value={clientInfo.atencion || ''} 
             onChange={handleInputChange} 
-            className="w-full px-3 py-2 border rounded-md" 
+            className="w-full px-3 py-1 border rounded-md" 
           />
         </div>
         <div>
@@ -78,7 +78,7 @@ const ClientInfo = ({ onClientInfoChange, initialData = {} }) => {
             name="direccion" 
             value={clientInfo.direccion || ''} 
             onChange={handleInputChange} 
-            className="w-full px-3 py-2 border rounded-md" 
+            className="w-full px-3 py-1 border rounded-md" 
           />
         </div>
       </div>

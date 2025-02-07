@@ -138,7 +138,6 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
           Agregar Item
         </button>
       </div>
-      
       <div className="space-y-4">
         {items.map((item, index) => (
           <div key={index} className="p-4 border rounded-lg space-y-4">
