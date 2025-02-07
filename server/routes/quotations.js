@@ -65,7 +65,7 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
     // Subir imagen a Cloudinary desde buffer
     const result = await streamUpload(req.file.buffer);
 
-    console.log("✅ Imagen subida a Cloudinary:", result.secure_url);
+    console.log(" Imagen subida a Cloudinary:", result.secure_url);
 
     res.json({
       url: result.secure_url, 
@@ -73,7 +73,7 @@ router.post('/uploads', upload.single('image'), async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ Error al subir imagen:", error);
+    console.error(" Error al subir imagen:", error);
     res.status(500).json({ 
       message: 'Error al subir la imagen', 
       error: error.message 

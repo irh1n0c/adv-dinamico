@@ -21,7 +21,8 @@ const QuotationForm = () => {
       razonSocial: '',
       ruc: '',
       area: '',
-      atencion: ''
+      atencion: '',
+      direccion: '' 
     },
     quotationDetails: {
       validezOferta: '',
@@ -95,7 +96,8 @@ const QuotationForm = () => {
             razonSocial: data.clientInfo?.razonSocial || '',
             ruc: data.clientInfo?.ruc || '',
             area: data.clientInfo?.area || '',
-            atencion: data.clientInfo?.atencion || ''
+            atencion: data.clientInfo?.atencion || '',
+            direccion: data.clientInfo?.direccion || ''
           },
           quotationDetails: {
             validezOferta: data.quotationDetails?.validezOferta || '',
@@ -125,7 +127,8 @@ const QuotationForm = () => {
           razonSocial: '',
           ruc: '',
           area: '',
-          atencion: ''
+          atencion: '',
+          direccion: ''
         },
         quotationDetails: {
           validezOferta: '',

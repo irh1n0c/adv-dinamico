@@ -11,7 +11,8 @@ const quotationSchema = new mongoose.Schema({
     razonSocial: { type: String, required: true },
     ruc: { type: String, required: true },
     area: String,
-    atencion: String
+    atencion: String,
+    direccion: String
   },
   quotationDetails: {
     validezOferta: String,

@@ -26,7 +26,7 @@ const QuotationItems = ({ onItemsChange, initialItems = [] }) => {
     if (field === 'cantidad' || field === 'precioUnitario') {
       const cantidad = field === 'cantidad' ? value : newItems[index].cantidad;
       const precioUnitario = field === 'precioUnitario' ? value : newItems[index].precioUnitario;
-      newItems[index].precioTotal = cantidad * precioUnitario;
+      newItems[index].precioTotal = (cantidad * precioUnitario).toFixed(2);
     }
     
     setItems(newItems);

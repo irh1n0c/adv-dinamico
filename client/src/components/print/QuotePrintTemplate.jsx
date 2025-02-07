@@ -46,6 +46,7 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
             <p className="text-sm"><strong>RUC:</strong> {clientInfo?.ruc}</p>
             <p className="text-sm"><strong>Área:</strong> {clientInfo?.area}</p>
             <p className="text-sm"><strong>Atención:</strong> {clientInfo?.atencion}</p>
+            <p className="text-sm"><strong>Dirección:</strong> {clientInfo?.direccion}</p>
           </div>
         </section>
 
