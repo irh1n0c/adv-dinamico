@@ -25,9 +25,6 @@ try {
   console.error('Error al conectar con la base de datos:', error);
 }
 
-app.get("/", (req, res) => {
-    res.send("Servidor funcionando correctamente");
-});
 // Rutas
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/quotations', quotationRoutes);
@@ -41,7 +38,7 @@ app.use('/uploads', (err, req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
