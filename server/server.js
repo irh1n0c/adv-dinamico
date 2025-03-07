@@ -25,6 +25,9 @@ try {
   console.error('Error al conectar con la base de datos:', error);
 }
 
+app.get("/", (req, res) => {
+    res.send("Servidor funcionando correctamente");
+});
 // Rutas
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/quotations', quotationRoutes);
