@@ -29,7 +29,7 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <img src="" alt="" className="h-20 object-cover" />
+            <img src="/images/white.jpg" alt="ISO Logo" className="h-20 object-cover" />
           </div>
         </div>
         <div className="text-right mt-2">
