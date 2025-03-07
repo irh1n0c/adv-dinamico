@@ -10,6 +10,8 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
     items = [],
   } = quoteData;
 
+  const total = items.reduce((sum, item) => sum + parseFloat(item.precioTotal), 0);
+
   return (
     <div className="print-container p-4 max-w-4xl mx-auto bg-white">
       {/* Header section */}
@@ -27,7 +29,7 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
             </div>
           </div>
           <div className="flex items-center justify-center">
-            <img src="/images/LOGO-INACAL-ok.png" alt="ISO Logo" className="h-20 object-cover" />
+            <img src="" alt="" className="h-20 object-cover" />
           </div>
         </div>
         <div className="text-right mt-2">
@@ -82,16 +84,15 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
                 <div className="text-sm whitespace-pre-line">{item.descripcion}</div>
                 {item.images && item.images.length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2">
-                  {item.images.map((image, imgIndex) => (
-                    <img
-                      key={imgIndex}
-                      src={API_CONFIG.getImageUrl(image.url)}
-                      alt={`Producto ${index + 1}`}
-                      className="w-full h-40 object-cover rounded"
-                    />
-                  ))}
-                </div>
-                
+                    {item.images.map((image, imgIndex) => (
+                      <img
+                        key={imgIndex}
+                        src={API_CONFIG.getImageUrl(image.url)}
+                        alt={`Producto ${index + 1}`}
+                        className="w-full h-40 object-cover rounded"
+                      />
+                    ))}
+                  </div>
                 )}
               </div>
               <div className="col-span-2 text-sm text-right">{parseFloat(item.precioUnitario).toFixed(2)}</div>
@@ -99,6 +100,12 @@ const QuotePrintTemplate = ({ quoteData = {} }) => {
             </div>
           </div>
         ))}
+        
+        {/* Total Sum Row */}
+        <div className="grid grid-cols-12 gap-2 p-2 border-t-2 border-gray-800">
+          <div className="col-span-10 text-right font-bold">TOTAL:</div>
+          <div className="col-span-2 text-right font-bold">{total.toFixed(2)}</div>
+        </div>
       </section>
 
       {/* Footer */}
