@@ -222,7 +222,7 @@ const QuotationForm = () => {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          <img src="/images/LOGO-INACAL-ok.png" alt="ISO Logo" className="h-24 object-cover" />
+          <img src="" alt="" className="h-24 object-cover" />
         </div>
       </div>
 
